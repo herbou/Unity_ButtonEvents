@@ -1,5 +1,5 @@
 # Unity Advanced UI Button Events: 
-```Click```  ```Double Click```  ```Long Press```
+```Click``` - ```Double Click``` - ```Long Press```
 
 Video tutorial: https://youtu.be/KplAjUHSu0U
 
