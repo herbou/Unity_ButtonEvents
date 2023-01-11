@@ -1,5 +1,5 @@
 # Unity Advanced UI Button Events: 
-```OnDoubleClick```, ```OnLongPress```, ```OnPointerDown```, ```OnPointerUp```, ```OnPointerEnter```, and  ```OnPointerExit```
+```Click```  ```Double Click```  ```Long Press```
 
 Video tutorial: https://youtu.be/KplAjUHSu0U
 
