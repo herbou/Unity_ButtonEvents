@@ -1,49 +1,62 @@
-﻿/*--------------------------------------
+/*--------------------------------------
    Email  : hamza95herbou@gmail.com
    Github : https://github.com/herbou
 ----------------------------------------*/
 
+using System;
+using System.Collections;
 using UnityEngine ;
 using UnityEngine.Events ;
 using UnityEngine.EventSystems ;
 using UnityEngine.UI ;
 
-[RequireComponent (typeof(Button))]
-public class ButtonLongPressListener : MonoBehaviour,IPointerDownHandler,IPointerUpHandler {
 
-   [Tooltip ("Hold duration in seconds")]
-   [Range (0.3f, 5f)] public float holdDuration = 0.5f ;
-   public UnityEvent onLongPress ;
+[RequireComponent(typeof(Button))]
+public class ButtonLongPressListener : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
-   private bool isPointerDown = false ;
-   private bool isLongPressed = false ;
-   private float elapsedTime = 0f ;
+    [Tooltip("Hold duration in seconds")]
+    [Range(0.3f, 5f)] public float holdDuration = 0.5f;
+    public UnityEvent onLongPress;
 
-   private Button button ;
+    private bool isPointerDown = false;
+    private bool isLongPressed = false;
+    private DateTime pressTime;
 
-   private void Awake () {
-      button = GetComponent<Button> () ;
-   }
+    private Button button;
 
-   public  void OnPointerDown (PointerEventData eventData) {
-      isPointerDown = true ;
-   }
+    private WaitForSeconds delay;
 
-   private void Update () {
-      if (isPointerDown && !isLongPressed) {
-         elapsedTime += Time.deltaTime ;
-         if (elapsedTime >= holdDuration) {
-            isLongPressed = true ;
-            elapsedTime = 0f ;
-            if (button.interactable && !object.ReferenceEquals (onLongPress, null))
-               onLongPress.Invoke () ;
-         }
-      }
-   }
 
-   public  void OnPointerUp (PointerEventData eventData) {
-      isPointerDown = false ;
-      isLongPressed = false ;
-      elapsedTime = 0f ;
-   }
+    private void Awake() {
+        button = GetComponent<Button>();
+        delay = new WaitForSeconds(0.1f);
+    }
+
+    public void OnPointerDown(PointerEventData eventData) {
+        isPointerDown = true;
+        pressTime = DateTime.Now;
+        StartCoroutine(Timer());
+    }
+
+
+    public void OnPointerUp(PointerEventData eventData) {
+        isPointerDown = false;
+        isLongPressed = false;
+    }
+
+    private IEnumerator Timer() {
+        while (isPointerDown && !isLongPressed) {
+            double elapsedSeconds = (DateTime.Now - pressTime).TotalSeconds;
+
+            if (elapsedSeconds >= holdDuration) {
+                isLongPressed = true;
+                if (button.interactable)
+                    onLongPress?.Invoke();
+
+                yield break;
+            }
+
+            yield return delay;
+        }
+    }
 }
